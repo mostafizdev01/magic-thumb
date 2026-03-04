@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { useParams } from "react-router-dom"
 import BackSoftDrop from "./BackSoftDrop";
+import AspectRatioSelector from "./AspectRatioSelector";
+import StyleSelector from "./StyleSelector";
 
 
 const Generate = () => {
@@ -10,6 +12,10 @@ const Generate = () => {
     const [additionalDetails, setAdditionalDetails] = useState("")
     const [thumbnail, setThumbnail] = useState(null)
     const [loading, setLoading] = useState(false)
+    const [AspectRatio, setAspectRatio] = useState ("16.9")
+    const [colorSchemeId, setColorSchemeId] = useState <string> ("")
+    const [style, setStyle] = useState ('Bold & Graphic')
+    const [styleDropdownOpen, setstyleDropdownOpen] = useState(false)
 
     return (
         <>
@@ -37,9 +43,10 @@ const Generate = () => {
                                         </div>
                                     </div>
                                     {/* AspectRatioSelector */}
-
+                                        <AspectRatioSelector value={AspectRatio} onChange={setAspectRatio} />
+                                    
                                     {/* StyleSelector */}
-
+                                        <StyleSelector value={style} onChange={setStyle} isOpen={styleDropdownOpen} setIsOpen={setstyleDropdownOpen} />
                                     {/* ColorSchemeSelector */}
 
                                     {/* Details */}
