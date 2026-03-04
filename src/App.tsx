@@ -4,6 +4,9 @@ import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import "./globals.css";
 import LenisScroll from "./components/LenisScroll";
+import GeneratePage from "./pages/GeneratePage";
+import MyGeneratePage from "./pages/MyGeneratePage";
+import LoginPage from "./pages/LoginPage";
 
 export default function App() {
     return (
@@ -12,6 +15,9 @@ export default function App() {
             <Navbar />
             <Routes>
                 <Route path="/" element={<HomePage />} />
+                <Route path="/generate" element={<GeneratePage />} />
+                <Route path="/my-generate" element={<MyGeneratePage />} />
+                <Route path="/login" element={<LoginPage />} />
             </Routes>
             <Footer />
         </>
