@@ -1,5 +1,5 @@
 import { footerData } from "../data/footer";
-import { DribbbleIcon, LinkedinIcon, TwitterIcon, YoutubeIcon } from "lucide-react";
+import { FacebookIcon, GithubIcon, LinkedinIcon, TwitterIcon } from "lucide-react";
 import { motion } from "motion/react";
 import type { IFooterLink } from "../types";
 import { Link } from "react-router-dom";
@@ -13,9 +13,9 @@ export default function Footer() {
                 viewport={{ once: true }}
                 transition={{ type: "spring", stiffness: 280, damping: 70, mass: 1 }}
             >
-                <a href="https://prebuiltui.com?utm_source=pixels">
-                    <img className="size-8 aspect-square" src="/assets/footer-logo.svg" alt="footer logo" width={32} height={32} />
-                </a>
+                <Link to="/">
+                    <img className="" src="/assets/magic-logo.png" alt="footer logo" width={240} height="auto" />
+                </Link>
                 {footerData.map((section, index) => (
                     <div key={index}>
                         <p className="text-slate-100 font-semibold">{section.title}</p>
@@ -39,20 +39,20 @@ export default function Footer() {
             >
                 <p className="max-w-60">Making every customer feel valued—no matter the size of your audience.</p>
                 <div className="flex items-center gap-4 mt-3">
-                    <a href="https://dribbble.com/prebuiltui" target="_blank" rel="noreferrer">
-                        <DribbbleIcon className="size-5 hover:text-pink-500" />
-                    </a>
-                    <a href="https://www.linkedin.com/company/prebuiltui" target="_blank" rel="noreferrer">
+                    <Link to="https://www.facebook.com/md.mostafiz.99854" target="_blank" rel="noreferrer">
+                        <FacebookIcon className="size-5 hover:text-pink-500" />
+                    </Link>
+                    <Link to="https://www.linkedin.com/in/mostafizdev01/" target="_blank" rel="noreferrer">
                         <LinkedinIcon className="size-5 hover:text-pink-500" />
-                    </a>
-                    <a href="https://x.com/prebuiltui" target="_blank" rel="noreferrer">
+                    </Link>
+                    <Link to="https://x.com/mostafizdev01" target="_blank" rel="noreferrer">
                         <TwitterIcon className="size-5 hover:text-pink-500" />
-                    </a>
-                    <a href="https://www.youtube.com/@prebuiltui" target="_blank" rel="noreferrer">
-                        <YoutubeIcon className="size-6 hover:text-pink-500" />
-                    </a>
+                    </Link>
+                    <Link to="https://github.com/mostafizdev01" target="_blank" rel="noreferrer">
+                        <GithubIcon className="size-6 hover:text-pink-500" />
+                    </Link>
                 </div>
-                <p className="mt-3 text-center">&copy; {new Date().getFullYear()} <a href="https://prebuiltui.com?utm_source=pixels">PrebuiltUI</a></p>
+                <p className="mt-3 text-center">&copy; {new Date().getFullYear()} <a href="https://www.mostafizdev.com/">MagicThumb | Mostafiz</a></p>
             </motion.div>
         </footer>
     );
