@@ -3,6 +3,8 @@ import { useParams } from "react-router-dom"
 import BackSoftDrop from "./BackSoftDrop";
 import AspectRatioSelector from "./AspectRatioSelector";
 import StyleSelector from "./StyleSelector";
+import ColorSchemeSelector from "./ColorSchemeSelector";
+import { colorSchemes, type AspectRatio, type IThumbnail, type ThumbnailStyle } from "../../public/assets/assets";
 
 
 const Generate = () => {
@@ -10,11 +12,11 @@ const Generate = () => {
     const { id } = useParams();
     const [title, setTitle] = useState("");
     const [additionalDetails, setAdditionalDetails] = useState("")
-    const [thumbnail, setThumbnail] = useState(null)
+    const [thumbnail, setThumbnail] = useState<IThumbnail | null>(null)
     const [loading, setLoading] = useState(false)
-    const [AspectRatio, setAspectRatio] = useState ("16.9")
-    const [colorSchemeId, setColorSchemeId] = useState <string> ("")
-    const [style, setStyle] = useState ('Bold & Graphic')
+    const [AspectRatio, setAspectRatio] = useState<AspectRatio> ("16:9")
+    const [colorSchemeId, setColorSchemeId] = useState <string> (colorSchemes[0].id)
+    const [style, setStyle] = useState <ThumbnailStyle> ('Bold & Graphic')
     const [styleDropdownOpen, setstyleDropdownOpen] = useState(false)
 
     return (
@@ -47,7 +49,9 @@ const Generate = () => {
                                     
                                     {/* StyleSelector */}
                                         <StyleSelector value={style} onChange={setStyle} isOpen={styleDropdownOpen} setIsOpen={setstyleDropdownOpen} />
+                                    
                                     {/* ColorSchemeSelector */}
+                                        <ColorSchemeSelector value={colorSchemeId} onChange={setColorSchemeId} />
 
                                     {/* Details */}
                                     <div className=" space-y-2">
