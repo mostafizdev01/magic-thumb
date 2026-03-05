@@ -5,6 +5,7 @@ import AspectRatioSelector from "./AspectRatioSelector";
 import StyleSelector from "./StyleSelector";
 import ColorSchemeSelector from "./ColorSchemeSelector";
 import { colorSchemes, type AspectRatio, type IThumbnail, type ThumbnailStyle } from "../../public/assets/assets";
+import PreviewPanel from "./PreviewPanel";
 
 
 const Generate = () => {
@@ -14,9 +15,9 @@ const Generate = () => {
     const [additionalDetails, setAdditionalDetails] = useState("")
     const [thumbnail, setThumbnail] = useState<IThumbnail | null>(null)
     const [loading, setLoading] = useState(false)
-    const [AspectRatio, setAspectRatio] = useState<AspectRatio> ("16:9")
-    const [colorSchemeId, setColorSchemeId] = useState <string> (colorSchemes[0].id)
-    const [style, setStyle] = useState <ThumbnailStyle> ('Bold & Graphic')
+    const [AspectRatio, setAspectRatio] = useState<AspectRatio>("16:9")
+    const [colorSchemeId, setColorSchemeId] = useState<string>(colorSchemes[0].id)
+    const [style, setStyle] = useState<ThumbnailStyle>('Bold & Graphic')
     const [styleDropdownOpen, setstyleDropdownOpen] = useState(false)
 
     return (
@@ -45,13 +46,13 @@ const Generate = () => {
                                         </div>
                                     </div>
                                     {/* AspectRatioSelector */}
-                                        <AspectRatioSelector value={AspectRatio} onChange={setAspectRatio} />
-                                    
+                                    <AspectRatioSelector value={AspectRatio} onChange={setAspectRatio} />
+
                                     {/* StyleSelector */}
-                                        <StyleSelector value={style} onChange={setStyle} isOpen={styleDropdownOpen} setIsOpen={setstyleDropdownOpen} />
-                                    
+                                    <StyleSelector value={style} onChange={setStyle} isOpen={styleDropdownOpen} setIsOpen={setstyleDropdownOpen} />
+
                                     {/* ColorSchemeSelector */}
-                                        <ColorSchemeSelector value={colorSchemeId} onChange={setColorSchemeId} />
+                                    <ColorSchemeSelector value={colorSchemeId} onChange={setColorSchemeId} />
 
                                     {/* Details */}
                                     <div className=" space-y-2">
@@ -78,7 +79,10 @@ const Generate = () => {
 
                         {/* RIGHT PANEL */}
                         <div>
-
+                            <div className=" p-6 rounded-2xl bg-white/8 border border-white/10 shadow-xl">
+                                <h2 className=" text-lg font-semibold text-zinc-100 mb-4">Preview</h2>
+                                <PreviewPanel thumbnail={thumbnail} isLoading={loading} aspectRatio={AspectRatio} />
+                            </div>
                         </div>
                     </div>
                 </main>
