@@ -1,8 +1,11 @@
+import BackSoftDrop from "../components/BackSoftDrop"
 
 
 const MyGeneratePage = () => {
   return (
-    <div>MyGeneratePage</div>
+    <>
+    <BackSoftDrop />
+    </>
   )
 }
 

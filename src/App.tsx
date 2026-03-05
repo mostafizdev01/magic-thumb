@@ -16,7 +16,8 @@ export default function App() {
             <Routes>
                 <Route path="/" element={<HomePage />} />
                 <Route path="/generate" element={<GeneratePage />} />
-                <Route path="/my-generate" element={<MyGeneratePage />} />
+                <Route path="/generate/:id" element={<GeneratePage />} />
+                <Route path="/my-generation" element={<MyGeneratePage />} />
                 <Route path="/login" element={<LoginPage />} />
             </Routes>
             <Footer />

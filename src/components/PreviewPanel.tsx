@@ -37,7 +37,7 @@ const PreviewPanel = ({ thumbnail, isLoading, aspectRatio }: { thumbnail: IThumb
                         <div>
                             <img src={thumbnail?.image_url} alt={thumbnail?.title}
                                 className=" h-full w-full object-cover" />
-                            <div className=" absolute inset-0 flex items-end justify-center bg-black/10 opacity-0 transition-opacity group-hover:opacity-100">
+                            <div className=" absolute inset-0 flex items-end justify-center bg-black/10 transition-opacity group-hover:opacity-100">
                                 <button onClick={onDownload} type="button"
                                     className=" mb-6 flex items-center gap-2 rounded-md px-5 py-2.5 text-xs font-medium transition bg-white/30 ring-2 ring-white/400 backdrop-blur hover:scale-105 active:scale-95">
                                     <DownloadIcon className=" size-4" />

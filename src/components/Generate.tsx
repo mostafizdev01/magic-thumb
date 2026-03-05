@@ -1,10 +1,10 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom"
 import BackSoftDrop from "./BackSoftDrop";
 import AspectRatioSelector from "./AspectRatioSelector";
 import StyleSelector from "./StyleSelector";
 import ColorSchemeSelector from "./ColorSchemeSelector";
-import { colorSchemes, type AspectRatio, type IThumbnail, type ThumbnailStyle } from "../../public/assets/assets";
+import { colorSchemes, dummyThumbnails, type AspectRatio, type IThumbnail, type ThumbnailStyle } from "../../public/assets/assets";
 import PreviewPanel from "./PreviewPanel";
 
 
@@ -19,6 +19,29 @@ const Generate = () => {
     const [colorSchemeId, setColorSchemeId] = useState<string>(colorSchemes[0].id)
     const [style, setStyle] = useState<ThumbnailStyle>('Bold & Graphic')
     const [styleDropdownOpen, setstyleDropdownOpen] = useState(false)
+
+    const handleGenerate = async () => {
+
+    }
+
+    const fetchThumbnail = async () => {
+        if(id){
+            const thumbnail : any = dummyThumbnails.find((thumbnail)=>thumbnail._id === id)
+            setThumbnail(thumbnail)
+            setAdditionalDetails(thumbnail?.user_prompt)
+            setTitle(thumbnail?.title)
+            setColorSchemeId(thumbnail?.color_scheme)
+            setAspectRatio(thumbnail?.aspect_ratio)
+            setStyle(thumbnail?.style)
+            setLoading(false)
+        }
+    }
+
+    useEffect(() => {
+        if (id) {
+            fetchThumbnail()
+        }
+    }, [id])
 
     return (
         <>
@@ -70,7 +93,7 @@ const Generate = () => {
 
                                 {
                                     !id && (
-                                        <button className=" text-[15px] w-full py-3.5 rounded-xl font-medium bg-linear-to-b from-pink-500 to-pink-600 hover:from-pink-700 disabled:cursor-not-allowed">{loading ? 'Generating...' : "Generate Thumbnail"}</button>
+                                        <button onClick={handleGenerate} className=" text-[15px] w-full py-3.5 rounded-xl font-medium bg-linear-to-b from-pink-500 to-pink-600 hover:from-pink-700 disabled:cursor-not-allowed">{loading ? 'Generating...' : "Generate Thumbnail"}</button>
                                     )
                                 }
 
