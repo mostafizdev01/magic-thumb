@@ -22,7 +22,7 @@ export default function Navbar() {
                 </Link>
 
                 <div className="hidden md:flex items-center gap-8 transition duration-500">
-                    <Link className="hover:text-pink-500 transition" to="/home">Home</Link>
+                    <Link className="hover:text-pink-500 transition" to="/">Home</Link>
                     <Link className="hover:text-pink-500 transition" to="/generate">Generate</Link>
                     <Link className="hover:text-pink-500 transition" to="/my-generation">My Generations</Link>
                     <Link className="hover:text-pink-500 transition" to="/contact">My Contact</Link>
