@@ -1,6 +1,16 @@
+import "dotenv/config";
 import compression from "compression";
 import cors from "cors";
 import express from "express";
+import session from "express-session"
+import MongoStore from "connect-mongo";
+
+declare module 'express-session' { // set the two property into session. So after we can easly access this two property and value.
+  interface SessionData {
+    isLoggedIn: boolean;
+    userId: string
+  }
+}
 
 const app = express();
 
@@ -11,10 +21,21 @@ app.use(express.json()); // Parse incoming JSON requests
 
 app.use(
   cors({
-    origin: "http://localhost:3000",
+    origin: "http://localhost:5173",
     credentials: true,
   })
 );
+
+app.use(session({
+  secret:  process.env.SESSION_SECRET as string,
+  resave: false,
+  saveUninitialized: false,
+  cookie: { maxAge: 1000 * 60 * 60 * 24 * 7 }, // cookie expair in 7 days
+  store: MongoStore.create({
+    mongoUrl: process.env.DB_URL as string,
+    collectionName: "sessions"
+  })
+}))
 
 // Default route for testing
 app.get("/", (_req, res) => {
