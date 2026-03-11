@@ -4,6 +4,7 @@ import cors from "cors";
 import express from "express";
 import session from "express-session"
 import MongoStore from "connect-mongo";
+import AuthRouter from "./app/routes/UserRoutes";
 
 declare module 'express-session' { // set the two property into session. So after we can easly access this two property and value.
   interface SessionData {
@@ -25,6 +26,8 @@ app.use(
     credentials: true,
   })
 );
+
+app.use("/api/user", AuthRouter)
 
 app.use(session({
   secret:  process.env.SESSION_SECRET as string,
