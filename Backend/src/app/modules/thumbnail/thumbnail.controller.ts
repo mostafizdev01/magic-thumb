@@ -4,7 +4,7 @@ import { GenerateContentConfig, HarmBlockThreshold, HarmCategory } from "@google
 import { ai } from "../../config/ai";
 import path from "path";
 import fs from "fs";
-import {v2 as cloudinary } from "cloudinary"
+import { v2 as cloudinary } from "cloudinary"
 
 
 const stylePrompts = {
@@ -75,12 +75,12 @@ export const generateThumbnail = async (req: Request, res: Response) => {
 
         let prompt = `Create a ${stylePrompts[style as keyof typeof stylePrompts]} for : '${title}'`;
 
-        if(color_scheme){
+        if (color_scheme) {
             prompt += `Use a ${colorSchemeDescriptions[color_scheme as keyof typeof colorSchemeDescriptions]} color scheme`
         }
 
-        if(user_prompt){
-            prompt +=`Additional details: ${user_prompt}`
+        if (user_prompt) {
+            prompt += `Additional details: ${user_prompt}`
         }
 
         prompt += `The thumbnail should be ${aspect_ratio}, visually stunning, and designed to maximize click-through rate. Make it bold, profetional, and impossible to ignore.`
@@ -93,7 +93,7 @@ export const generateThumbnail = async (req: Request, res: Response) => {
         })
 
         // Check if the response is valid
-        if(!response?.candidates?.[0]?.content?.parts){
+        if (!response?.candidates?.[0]?.content?.parts) {
             throw new Error("Unexpected response!")
         }
 
@@ -102,8 +102,8 @@ export const generateThumbnail = async (req: Request, res: Response) => {
 
         let finalBuffer: Buffer | null = null;
 
-        for(const part of parts){
-            if(part.inlineDate){
+        for (const part of parts) {
+            if (part.inlineDate) {
                 finalBuffer = Buffer.from(part.inlineDate.data, 'base64')
             }
         }
@@ -112,12 +112,12 @@ export const generateThumbnail = async (req: Request, res: Response) => {
         const filePath = path.join("images", filename)
 
         // Create the images directory if it does't exist
-        fs.mkdirSync("images", {recursive: true})
+        fs.mkdirSync("images", { recursive: true })
 
         // Write the final image to the file
         fs.writeFileSync(filePath, finalBuffer!)
 
-        const uploadResult = await cloudinary.uploader.upload(filePath, {resource_type: "image"})
+        const uploadResult = await cloudinary.uploader.upload(filePath, { resource_type: "image" })
 
         thumbnail.image_url = uploadResult.url;
         thumbnail.isGenerating = false;
@@ -136,10 +136,69 @@ export const generateThumbnail = async (req: Request, res: Response) => {
     } catch (error: any) {
         console.log("error", error)
         res.json({
-            success: false, 
+            success: false,
             staus: 500,
             message: error.message
         })
+    }
+}
+
+/// Controller for thumbnail Geting...
+
+export const getMyThumbnail = async (req: Request, res: Response)=> {
+    try {
+        const {userId} = req.session;
+        const myThumbnail = await Thumbnail.find({userId})
+
+        if(!myThumbnail){
+          return  res.json({
+                success: false,
+                status: 400,
+                message: "Not found Thumbnail!"
+            })
+        }
+
+        return res.status(200).json({
+            success: true,
+            status: 200,
+            message: "Thumbnail Get Success!",
+            data: myThumbnail
+        })
+    } catch (error: any) {
+        console.log("error:", error)
+        res.status(500).json({success: false, message: error.message})
+    }
+}
+/// Controller to get single Thumbnail of a user
+
+export const getThumbnailById = async (req: Request, res: Response)=> {
+    try {
+        const {userId} = req.session;
+        const {id} = req.params;
+        const myThumbnail = await Thumbnail.findOne({userId, _id: id})
+
+        res.json({
+            success: true,
+            message: "Get sigle thumbnail success!",
+            data: myThumbnail
+        })
+
+        if(!myThumbnail){
+          return  res.json({
+                success: false,
+                status: 400,
+                message: "Not found Thumbnail!"
+            })
+        }
+
+        return res.status(200).json({
+            success: true,
+            status: 200,
+            message: "Thumbnail Get Success!"
+        })
+    } catch (error: any) {
+        console.log("error:", error)
+        res.status(500).json({success: false, message: error.message})
     }
 }
 
@@ -147,20 +206,21 @@ export const generateThumbnail = async (req: Request, res: Response) => {
 
 export const deleteThumbnail = async (req: Request, res: Response) => {
     try {
-        const {id} = req.params;
-        const {userId} = req.session;
+        const { id } = req.params;
+        const { userId } = req.session;
 
-        await Thumbnail.findByIdAndDelete({_id: id, userId})
+        await Thumbnail.findByIdAndDelete({ _id: id, userId })
 
         res.json({
             success: true,
             status: 200,
             message: "Thumbnail Deleted!"
         })
+
     } catch (error: any) {
         console.log("error", error)
         res.json({
-            success: false, 
+            success: false,
             staus: 500,
             message: error.message
         })
