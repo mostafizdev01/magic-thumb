@@ -29,7 +29,7 @@ app.use(
 );
 
 app.use("/api/user", AuthRouter)
-app.use("/api/generate", thumbnailRouter)
+app.use("/api", thumbnailRouter)
 
 app.use(session({
   secret:  process.env.SESSION_SECRET as string,

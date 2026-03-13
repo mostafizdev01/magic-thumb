@@ -39,7 +39,7 @@ const colorSchemeDescriptions = {
 
 export const generateThumbnail = async (req: Request, res: Response) => {
     try {
-        const { userId } = req.session;
+        const { userId } = req.body;
         const { title, prompt: user_prompt, style, aspect_ratio, color_scheme, text_overlay } = req.body;
 
         const thumbnail = await Thumbnail.create({
@@ -93,7 +93,7 @@ export const generateThumbnail = async (req: Request, res: Response) => {
         })
 
         // Check if the response is valid
-        if (!response?.candidates?.[0]?.content?.parts) {
+        if (!response?.candidates[0]?.content?.parts) {
             throw new Error("Unexpected response!")
         }
 
@@ -103,8 +103,8 @@ export const generateThumbnail = async (req: Request, res: Response) => {
         let finalBuffer: Buffer | null = null;
 
         for (const part of parts) {
-            if (part.inlineDate) {
-                finalBuffer = Buffer.from(part.inlineDate.data, 'base64')
+            if (part.inlineData) {
+                finalBuffer = Buffer.from(part.inlineData.data, 'base64')
             }
         }
 
