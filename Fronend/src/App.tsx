@@ -8,10 +8,12 @@ import GeneratePage from "./pages/GeneratePage";
 import MyGeneratePage from "./pages/MyGeneratePage";
 import LoginPage from "./pages/LoginPage";
 import YtPreviewPage from "./pages/YtPreviewPage";
+import { Toaster } from "react-hot-toast";
 
 export default function App() {
     return (
         <>
+        < Toaster position="bottom-right" />
             <LenisScroll />
             <Navbar />
             <Routes>
