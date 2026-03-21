@@ -237,6 +237,34 @@ export const generateThumbnail = async (req: Request, res: Response) => {
   }
 };
 
+
+/// Get MyThumbnail for Controller...
+export const getMyThumbnail = async (req: Request, res: Response) => {
+  try {
+    const  userId  = '69afcfa37875502fb56d31c6';
+    // const { id } = req.params;
+    const thumbnail = await Thumbnail.find({ userId })
+
+    if (!thumbnail) {
+      return res.json({
+        success: false,
+        status: 400,
+        message: "Not found Thumbnail!"
+      })
+    }
+
+    return res.status(200).json({
+      success: true,
+      status: 200,
+      message: " My Thumbnail Get Success!",
+      thumbnail
+    })
+  } catch (error: any) {
+    console.log("error:", error)
+    res.status(500).json({ success: false, message: error.message })
+  }
+}
+
 /// Controller to get single Thumbnail of a user
 
 export const getThumbnailById = async (req: Request, res: Response) => {
@@ -264,6 +292,7 @@ export const getThumbnailById = async (req: Request, res: Response) => {
     res.status(500).json({ success: false, message: error.message })
   }
 }
+
 
 /// Controller for thumbnail deletion
 
