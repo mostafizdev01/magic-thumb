@@ -3,6 +3,7 @@ import BackSoftDrop from "../components/BackSoftDrop"
 import { dummyThumbnails, type IThumbnail } from "../../public/assets/assets"
 import { Link, useNavigate } from "react-router-dom"
 import { ArrowRightIcon, DownloadIcon, TrashIcon } from "lucide-react"
+import { api } from "../config/api"
 
 
 const MyGeneratePage = () => {
@@ -18,9 +19,13 @@ const MyGeneratePage = () => {
 
   }
 
-  const fetchThumbnails = () => {
-    setThumbnails(dummyThumbnails as unknown as IThumbnail[])
-    setLoading(false)
+  const fetchThumbnails = async () => {
+    setLoading(true)
+    const {data} = await api.get("/api/generate/my-thumbnail")
+    if(data?.thumbnail){
+      setLoading(false)
+      setThumbnails(data?.thumbnail)
+    }
   }
 
   const handleDownload = (image_url: string) => {

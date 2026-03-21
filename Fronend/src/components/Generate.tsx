@@ -135,7 +135,7 @@ const Generate = () => {
 
                                 {
                                     !id && (
-                                        <button disabled={!thumbnail} onClick={handleGenerate} className="text-[15px] w-full py-3.5 rounded-xl font-medium bg-linear-to-b from-pink-500 to-pink-600 hover:from-pink-700 disabled:cursor-not-allowed">{loading ? <div className=" flex justify-center items-center gap-1.5"><LoaderIcon className=" animate-spin size-5 [animation-duration:.6s]" /> Generating... </div> : "Generate Thumbnail"}</button>
+                                        <button onClick={handleGenerate} className="text-[15px] w-full py-3.5 rounded-xl font-medium bg-linear-to-b from-pink-500 to-pink-600 hover:from-pink-700 disabled:cursor-not-allowed">{loading ? <div className=" flex justify-center items-center gap-1.5"><LoaderIcon className=" animate-spin size-5 [animation-duration:.6s]" /> Generating... </div> : "Generate Thumbnail"}</button>
                                     )
                                 }
 
