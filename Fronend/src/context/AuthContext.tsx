@@ -32,27 +32,30 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
     const signUp = async ({ name, email, password }: { name: string, email: string, password: string }) => {
         try {
-            const { data } = await api.post("/api/auth/register", { name, email, password })
+            const { data } = await api.post("/api/user/register", { name, email, password })
             if (data?.user) {
                 setUser(data.user as IUser)
                 setIsLoggedIn(true)
             }
             toast.success(data.message)
         } catch (error) {
-            console.log("error:", error)
+            // console.log("error:", error)
+            toast.error("Something wen't wrong!")
         }
     }
 
     const login = async ({ email, password }: { email: string, password: string }) => {
         try {
-            const { data } = await api.post("/api/auth/login", { email, password })
+            const { data } = await api.post("/api/user/login", { email, password })
             if (data?.user) {
                 setUser(data.user as IUser)
                 setIsLoggedIn(true)
+                toast.success(data.message)
             }
-            toast.success(data.message)
-        } catch (error) {
-            console.log("error:", error)
+            
+        } catch (error: any) {
+            // console.log("error:", error)
+            toast.error("Invalid email or password!")
         }
     }
     

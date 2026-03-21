@@ -1,14 +1,19 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import BackSoftDrop from "./BackSoftDrop"
+import { useAuth } from "../context/AuthContext"
+import { useNavigate } from "react-router-dom"
 
 const Login = () => {
     const [state, setState] = useState("login")
+    const {user, login, signUp} = useAuth();
+    const navigate = useNavigate();
 
     const [formData, setFormData] = useState({
         name: '',
         email: '',
         password: ''
     })
+    
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target
@@ -17,8 +22,19 @@ const Login = () => {
 
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
+        if(state === "login"){
+            login(formData)
+        }else{
+            signUp(formData)
+        }
 
     }
+
+    useEffect(()=> {
+        if(user){
+            navigate("/")
+        }
+    }, [user])
 
     return (
         <>

@@ -4,8 +4,10 @@ import { motion } from "motion/react";
 import { navlinks } from "../data/navlinks";
 import type { INavLink } from "../types";
 import { Link, NavLink, useNavigate } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
 
 export default function Navbar() {
+    const { isLoggedIn, user, logout } = useAuth();
     const [isOpen, setIsOpen] = useState(false);
     const navigate = useNavigate()
 
@@ -24,13 +26,34 @@ export default function Navbar() {
                 <div className="hidden md:flex items-center gap-8 transition duration-500">
                     <Link className="hover:text-pink-500 transition" to="/">Home</Link>
                     <Link className="hover:text-pink-500 transition" to="/generate">Generate</Link>
-                    <Link className="hover:text-pink-500 transition" to="/my-generation">My Generations</Link>
-                    <Link className="hover:text-pink-500 transition" to="/contact">My Contact</Link>
+                    {
+                        isLoggedIn ?
+                            <Link className="hover:text-pink-500 transition" to="/my-generation">My Generations</Link>
+                            :
+                            <Link className="hover:text-pink-500 transition" to="/about">About Us</Link>
+                    }
+                    <Link className="hover:text-pink-500 transition" to="/contact">Contact Us</Link>
                 </div>
 
-                <button onClick={()=> navigate("/login")} className="hidden md:block px-6 py-2.5 bg-pink-600 hover:bg-pink-700 active:scale-95 transition-all rounded-full">
-                    Get Started
-                </button>
+                <div className=" flex items-center gap-2">
+                    {
+                        isLoggedIn ?
+                            (<div className=" relative group">
+                                <button className="hidden md:block rounded-full size-8 bg-white/20 border-2 border-white/10">
+                                    {user?.name.charAt(0).toUpperCase() || "U"}
+                                </button>
+                                <div className=" absolute hidden group-hover:block top-6 right-0 pt-4">
+                                    <button onClick={() => logout()} className=" bg-white/20 border-2 border-white/10 px-5 py-1.5 rounded">
+                                        Logout
+                                    </button>
+                                </div>
+                            </div>)
+                            :
+                            (<button onClick={() => navigate("/login")} className="hidden md:block px-6 py-2.5 bg-pink-600 hover:bg-pink-700 active:scale-95 transition-all rounded-full">
+                                Get Started
+                            </button>)
+                    }
+                </div>
                 <button onClick={() => setIsOpen(true)} className="md:hidden">
                     <MenuIcon size={26} className="active:scale-90 transition" />
                 </button>

@@ -1,16 +1,22 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom"
+import { useLocation, useNavigate, useParams } from "react-router-dom"
 import BackSoftDrop from "./BackSoftDrop";
 import AspectRatioSelector from "./AspectRatioSelector";
 import StyleSelector from "./StyleSelector";
 import ColorSchemeSelector from "./ColorSchemeSelector";
-import { colorSchemes, dummyThumbnails, type AspectRatio, type IThumbnail, type ThumbnailStyle } from "../../public/assets/assets";
+import { colorSchemes, type AspectRatio, type IThumbnail, type ThumbnailStyle } from "../../public/assets/assets";
 import PreviewPanel from "./PreviewPanel";
+import { api } from "../config/api";
+import toast from "react-hot-toast";
+import { LoaderIcon } from "lucide-react";
 
 
 const Generate = () => {
 
     const { id } = useParams();
+    const {pathname} = useLocation();
+    const navigate = useNavigate();
+
     const [title, setTitle] = useState("");
     const [additionalDetails, setAdditionalDetails] = useState("")
     const [thumbnail, setThumbnail] = useState<IThumbnail | null>(null)
@@ -21,27 +27,63 @@ const Generate = () => {
     const [styleDropdownOpen, setstyleDropdownOpen] = useState(false)
 
     const handleGenerate = async () => {
+        setLoading(true)
+        const api_payload = {
+            title,
+            prompt: additionalDetails,
+            style,
+            aspect_ratio: AspectRatio,
+            color_scheme: colorSchemeId,
+            text_overlay: true
+        }
 
-    }
-
-    const fetchThumbnail = async () => {
-        if(id){
-            const thumbnail : any = dummyThumbnails.find((thumbnail)=>thumbnail._id === id)
-            setThumbnail(thumbnail)
-            setAdditionalDetails(thumbnail?.user_prompt)
-            setTitle(thumbnail?.title)
-            setColorSchemeId(thumbnail?.color_scheme)
-            setAspectRatio(thumbnail?.aspect_ratio)
-            setStyle(thumbnail?.style)
+        const {data} = await api.post("/api/generate", api_payload);
+        
+        setThumbnail(data?.thumbnail);
+        
+        if(data?.success){
             setLoading(false)
+            toast.success(data.message)
+            // navigate("/generate" +data?.data?._id);
         }
     }
 
-    useEffect(() => {
-        if (id) {
-            fetchThumbnail()
-        }
-    }, [id])
+    // const fetchThumbnail = async () => {
+    //     try {
+    //         const {data} = await api.get(`/api/generate/${thumbnail?._id}`);
+    //         console.log("data:", data)
+    //         setThumbnail(data?.thumbnail as IThumbnail);
+    //         setLoading(!data?.thumbnail.image_url);
+    //         setAdditionalDetails(data?.thumbnail?.user_prompt)
+    //         setTitle(data?.thumbnail?.title)
+    //         setColorSchemeId(data?.thumbnail?.color_scheme)
+    //         setAspectRatio(data?.thumbnail.aspect_ratio)
+    //         setStyle(data?.thumbnail.style)
+    //     } catch (error) {
+    //         console.log("error: ", error);
+    //         toast.error("Something Wen't wrong!")
+            
+    //     }
+    // }
+
+    // useEffect(() => {
+    //     if (thumbnail) {
+    //         fetchThumbnail()
+    //     }
+    //     if(thumbnail && loading){
+    //         const interval = setInterval(() => {
+    //             fetchThumbnail()
+    //         }, 5000);
+    //         return ()=> clearInterval(interval)
+    //     }
+    // }, [handleGenerate])
+
+    // useEffect(() => {
+    //   if(!id && thumbnail){
+    //     setThumbnail(null)
+    //   }
+    // }, [pathname])
+    
 
     return (
         <>
@@ -93,7 +135,7 @@ const Generate = () => {
 
                                 {
                                     !id && (
-                                        <button onClick={handleGenerate} className=" text-[15px] w-full py-3.5 rounded-xl font-medium bg-linear-to-b from-pink-500 to-pink-600 hover:from-pink-700 disabled:cursor-not-allowed">{loading ? 'Generating...' : "Generate Thumbnail"}</button>
+                                        <button disabled={!thumbnail} onClick={handleGenerate} className="text-[15px] w-full py-3.5 rounded-xl font-medium bg-linear-to-b from-pink-500 to-pink-600 hover:from-pink-700 disabled:cursor-not-allowed">{loading ? <div className=" flex justify-center items-center gap-1.5"><LoaderIcon className=" animate-spin size-5 [animation-duration:.6s]" /> Generating... </div> : "Generate Thumbnail"}</button>
                                     )
                                 }
 
