@@ -8,35 +8,36 @@ import { v2 as cloudinary } from "cloudinary"
 
 
 const stylePrompts = {
-    "Bold & Graphic": "eye-catching thumbnail, bold typography, vibrant colors, expressive facial reaction, dramatic lighting, high contrast, click-worthy composition, professional style",
+  "Bold & Graphic": "eye-catching thumbnail, bold typography, vibrant colors, expressive facial reaction, dramatic lighting, high contrast, click-worthy composition, professional style",
 
-    "Tech/Futuristic": "futuristic thumbnail, sleek modern design, digital UI elements, glowing accents, holographic effects, cyber-tech aesthetic, sharp lighting, high-tech atosphere",
+  "Tech/Futuristic": "futuristic thumbnail, sleek modern design, digital UI elements, glowing accents, holographic effects, cyber-tech aesthetic, sharp lighting, high-tech atosphere",
 
-    "Minimalist": "minimalist thumbnail, clean layout, simple shapes, limited color palette, plenty of negative space, modern flat design, clear focal point",
+  "Minimalist": "minimalist thumbnail, clean layout, simple shapes, limited color palette, plenty of negative space, modern flat design, clear focal point",
 
-    "Photorealistic": "Photorealistic thumbnail ultra-realistic lighting, natural skin tones, candid moment, DSLR-style photography, lifestyle realism, shallow depth of field",
+  "Photorealistic": "Photorealistic thumbnail ultra-realistic lighting, natural skin tones, candid moment, DSLR-style photography, lifestyle realism, shallow depth of field",
 
-    "Illustrated": "Illustrated thumbnail, bold outlines, vibrant colors, creative cartoon or vector art style"
+  "Illustrated": "Illustrated thumbnail, bold outlines, vibrant colors, creative cartoon or vector art style"
 }
 
 const colorSchemeDescriptions = {
-    vibrant: "vibrant and energetic colors, high saturation, bold contrasts, eye-catching palette",
+  vibrant: "vibrant and energetic colors, high saturation, bold contrasts, eye-catching palette",
 
-    sunset: "warm sunset tones, orange pink and purple hues, soft gradients, cinematic glow",
+  sunset: "warm sunset tones, orange pink and purple hues, soft gradients, cinematic glow",
 
-    forest: "natural green tones, earthy colors, calm and organic palette, fresh atmosphere",
+  forest: "natural green tones, earthy colors, calm and organic palette, fresh atmosphere",
 
-    neon: "neon glow effects, electric blues and pinks, cyberpunk lighting, high contrast glow",
+  neon: "neon glow effects, electric blues and pinks, cyberpunk lighting, high contrast glow",
 
-    purple: "purple-dominant color palette, magenta and violet tones, modern and stylish mood",
+  purple: "purple-dominant color palette, magenta and violet tones, modern and stylish mood",
 
-    monochrome: "black and white color scheme, high contrast, dramatic lighting, timeless aesthetic",
+  monochrome: "black and white color scheme, high contrast, dramatic lighting, timeless aesthetic",
 
-    ocean: "cool blue and teal tones, aquatic color palette, fresh and clean atmosphere",
+  ocean: "cool blue and teal tones, aquatic color palette, fresh and clean atmosphere",
 
-    pastel: "soft pastel colors, low saturation, gentle tones, calm and friendly aesthetic"
+  pastel: "soft pastel colors, low saturation, gentle tones, calm and friendly aesthetic"
 };
- 
+
+// create thumbnail useing gemeni-pro-3 api....
 // export const generateThumbnail = async (req: Request, res: Response) => {
 //     try {
 //         const { userId } = req.body;
@@ -147,18 +148,16 @@ const colorSchemeDescriptions = {
 
 /// Controller for thumbnail Geting...
 
-
-// ⚠️ Cloudinary config আগে করে রাখবা
-// cloudinary.config({ cloud_name, api_key, api_secret });
-
 // Generate thumbnail useing in cloudflare
+
 export const generateThumbnail = async (req: Request, res: Response) => {
+
   try {
     const { userId, title, prompt: user_prompt, style, aspect_ratio, color_scheme } = req.body;
 
     // 🧾 DB create
     const thumbnail = await Thumbnail.create({
-      userId,
+      userId: "69afcfa37875502fb56d31c6",
       title,
       prompt_used: user_prompt,
       user_prompt,
@@ -190,7 +189,7 @@ export const generateThumbnail = async (req: Request, res: Response) => {
           "Content-Type": "application/json",
           "Authorization": `Bearer 12341234`
         },
-        
+
         body: JSON.stringify({ prompt })
       }
     );
@@ -225,7 +224,7 @@ export const generateThumbnail = async (req: Request, res: Response) => {
     res.json({
       success: true,
       message: "Thumbnail Generated Successfully!",
-      data: thumbnail
+      thumbnail
     });
 
   } catch (error: any) {
@@ -241,57 +240,52 @@ export const generateThumbnail = async (req: Request, res: Response) => {
 /// Controller to get single Thumbnail of a user
 
 export const getThumbnailById = async (req: Request, res: Response) => {
-    try {
-        const { userId } = req.session;
-        const { id } = req.params;
-        const myThumbnail = await Thumbnail.findOne({ userId, _id: id })
+  try {
+    // const { userId } = req.session;
+    const { id } = req.params;
+    const thumbnail = await Thumbnail.findOne({ _id: id })
 
-        res.json({
-            success: true,
-            message: "Get sigle thumbnail success!",
-            data: myThumbnail
-        })
-
-        if (!myThumbnail) {
-            return res.json({
-                success: false,
-                status: 400,
-                message: "Not found Thumbnail!"
-            })
-        }
-
-        return res.status(200).json({
-            success: true,
-            status: 200,
-            message: "Thumbnail Get Success!"
-        })
-    } catch (error: any) {
-        console.log("error:", error)
-        res.status(500).json({ success: false, message: error.message })
+    if (!thumbnail) {
+      return res.json({
+        success: false,
+        status: 400,
+        message: "Not found Thumbnail!"
+      })
     }
+
+    return res.status(200).json({
+      success: true,
+      status: 200,
+      message: "Thumbnail Get Success!",
+      thumbnail
+    })
+  } catch (error: any) {
+    console.log("error:", error)
+    res.status(500).json({ success: false, message: error.message })
+  }
 }
 
 /// Controller for thumbnail deletion
 
 export const deleteThumbnail = async (req: Request, res: Response) => {
-    try {
-        const { id } = req.params;
-        const { userId } = req.session;
+  try {
+    const { id } = req.params;
+    const { userId } = req.session;
 
-        await Thumbnail.findByIdAndDelete({ _id: id, userId })
+    await Thumbnail.findByIdAndDelete({ _id: id, userId })
 
-        res.json({
-            success: true,
-            status: 200,
-            message: "Thumbnail Deleted!"
-        })
+    res.json({
+      success: true,
+      status: 200,
+      message: "Thumbnail Deleted!"
+    })
 
-    } catch (error: any) {
-        console.log("error", error)
-        res.json({
-            success: false,
-            staus: 500,
-            message: error.message
-        })
-    }
+  } catch (error: any) {
+    console.log("error", error)
+    res.json({
+      success: false,
+      staus: 500,
+      message: error.message
+    })
+  }
 }

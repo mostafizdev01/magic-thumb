@@ -17,7 +17,7 @@ declare module 'express-session' { // set the two property into session. So afte
 const app = express();
 
 // Middleware
-app.use(cors()); // Enables Cross-Origin Resource Sharing
+// app.use(cors()); // Enables Cross-Origin Resource Sharing
 app.use(compression()); // Compresses response bodies for faster delivery
 app.use(express.json()); // Parse incoming JSON requests
 
@@ -28,6 +28,7 @@ app.use(
   })
 );
 
+
 app.use("/api/user", AuthRouter)
 app.use("/api", thumbnailRouter)
 
@@ -35,7 +36,11 @@ app.use(session({
   secret:  process.env.SESSION_SECRET as string,
   resave: false,
   saveUninitialized: false,
-  cookie: { maxAge: 1000 * 60 * 60 * 24 * 7 }, // cookie expair in 7 days
+  cookie: { maxAge: 1000 * 60 * 60 * 24 * 7,
+    httpOnly: true,
+    secure: false,
+    sameSite: "lax"
+   }, // cookie expair in 7 days
   store: MongoStore.create({
     mongoUrl: process.env.DB_URL as string,
     collectionName: "sessions"

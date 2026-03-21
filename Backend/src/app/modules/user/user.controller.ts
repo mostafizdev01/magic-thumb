@@ -21,8 +21,8 @@ export const registerUser = async (req:Request, res:Response)=> {
         await newUser.save()
 
         /// create the session data
-        req.session.isLoggedIn = true,
-        req.session.userId = newUser._id as unknown as string;
+        // req.session.isLoggedIn = true,
+        // req.session.userId = newUser._id as unknown as string;
 
         return res.json({
             success: true,
