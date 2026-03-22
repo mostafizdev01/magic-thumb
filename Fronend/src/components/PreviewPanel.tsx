@@ -3,7 +3,6 @@ import type { AspectRatio, IThumbnail } from "../../public/assets/assets"
 
 const PreviewPanel = ({ thumbnail, isLoading, aspectRatio }: { thumbnail: IThumbnail | null, isLoading: boolean, aspectRatio: AspectRatio }) => {
 
-    console.log("thumbnail:", thumbnail)
     const aspectClasses = {
         "16:9": "aspect-video",
         "1:1": "aspect-square",

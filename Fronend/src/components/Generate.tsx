@@ -13,8 +13,8 @@ import { LoaderIcon } from "lucide-react";
 
 const Generate = () => {
 
-    const { id } = useParams();
     const {pathname} = useLocation();
+    const { id } = useParams();
     const navigate = useNavigate();
 
     const [title, setTitle] = useState("");
@@ -44,45 +44,45 @@ const Generate = () => {
         if(data?.success){
             setLoading(false)
             toast.success(data.message)
-            // navigate("/generate" +data?.data?._id);
+            navigate("/generate/" +data?.thumbnail?._id);
         }
     }
 
-    // const fetchThumbnail = async () => {
-    //     try {
-    //         const {data} = await api.get(`/api/generate/${thumbnail?._id}`);
-    //         console.log("data:", data)
-    //         setThumbnail(data?.thumbnail as IThumbnail);
-    //         setLoading(!data?.thumbnail.image_url);
-    //         setAdditionalDetails(data?.thumbnail?.user_prompt)
-    //         setTitle(data?.thumbnail?.title)
-    //         setColorSchemeId(data?.thumbnail?.color_scheme)
-    //         setAspectRatio(data?.thumbnail.aspect_ratio)
-    //         setStyle(data?.thumbnail.style)
-    //     } catch (error) {
-    //         console.log("error: ", error);
-    //         toast.error("Something Wen't wrong!")
+    const fetchThumbnail = async () => {
+        try {
+            const {data} = await api.get(`/api/generate/${id}`);
+            // console.log("data:", data)
+            setThumbnail(data?.thumbnail as IThumbnail);
+            setLoading(!data?.thumbnail.image_url);
+            setAdditionalDetails(data?.thumbnail?.user_prompt)
+            setTitle(data?.thumbnail?.title)
+            setColorSchemeId(data?.thumbnail?.color_scheme)
+            setAspectRatio(data?.thumbnail.aspect_ratio)
+            setStyle(data?.thumbnail.style)
+        } catch (error) {
+            // console.log("error: ", error);
+            toast.error("Something wen't wrong!")
             
-    //     }
-    // }
+        }
+    }
 
-    // useEffect(() => {
-    //     if (thumbnail) {
-    //         fetchThumbnail()
-    //     }
-    //     if(thumbnail && loading){
-    //         const interval = setInterval(() => {
-    //             fetchThumbnail()
-    //         }, 5000);
-    //         return ()=> clearInterval(interval)
-    //     }
-    // }, [handleGenerate])
+    useEffect(() => {
+        if (!thumbnail) {
+            fetchThumbnail()
+        }
+        if(thumbnail && loading){
+            const interval = setInterval(() => {
+                fetchThumbnail()
+            }, 5000);
+            return ()=> clearInterval(interval)
+        }
+    }, [pathname])
 
-    // useEffect(() => {
-    //   if(!id && thumbnail){
-    //     setThumbnail(null)
-    //   }
-    // }, [pathname])
+    useEffect(() => {
+      if(!id && thumbnail){
+        setThumbnail(null)
+      }
+    }, [pathname])
     
 
     return (

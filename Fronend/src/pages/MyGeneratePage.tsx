@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
 import BackSoftDrop from "../components/BackSoftDrop"
-import { dummyThumbnails, type IThumbnail } from "../../public/assets/assets"
+import {type IThumbnail } from "../../public/assets/assets"
 import { Link, useNavigate } from "react-router-dom"
 import { ArrowRightIcon, DownloadIcon, TrashIcon } from "lucide-react"
 import { api } from "../config/api"
