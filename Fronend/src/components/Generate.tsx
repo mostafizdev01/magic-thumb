@@ -76,13 +76,13 @@ const Generate = () => {
             }, 5000);
             return ()=> clearInterval(interval)
         }
-    }, [pathname])
+    }, [id])
 
     useEffect(() => {
       if(!id && thumbnail){
         setThumbnail(null)
       }
-    }, [pathname])
+    }, [id])
     
 
     return (

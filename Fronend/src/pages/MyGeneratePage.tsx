@@ -1,9 +1,10 @@
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import BackSoftDrop from "../components/BackSoftDrop"
-import {type IThumbnail } from "../../public/assets/assets"
+import { type IThumbnail } from "../../public/assets/assets"
 import { Link, useNavigate } from "react-router-dom"
 import { ArrowRightIcon, DownloadIcon, TrashIcon } from "lucide-react"
 import { api } from "../config/api"
+import toast from "react-hot-toast"
 
 
 const MyGeneratePage = () => {
@@ -11,6 +12,9 @@ const MyGeneratePage = () => {
   const [thumbnails, setThumbnails] = useState<IThumbnail[]>([])
   const [loading, setLoading] = useState(false)
   const navigate = useNavigate()
+  const cache = useRef<any>(null);
+  const [showModal, setShowModal] = useState(false);
+  const [selectedId, setSelectedId] = useState<string | null>(null);
 
   const aspectRatioClassMap: Record<string, string> = {
     '16:9': 'aspect-video',
@@ -20,9 +24,14 @@ const MyGeneratePage = () => {
   }
 
   const fetchThumbnails = async () => {
+    if (cache.current) {
+      setThumbnails(cache.current)
+      return
+    }
     setLoading(true)
-    const {data} = await api.get("/api/generate/my-thumbnail")
-    if(data?.thumbnail){
+    const { data } = await api.get("/api/generate/my-thumbnail")
+    if (data?.thumbnail) {
+      cache.current = data?.thumbnail;
       setLoading(false)
       setThumbnails(data?.thumbnail)
     }
@@ -32,10 +41,34 @@ const MyGeneratePage = () => {
     window.open(image_url, "_blank")
   }
 
-  const handleDelete = (id: string) => {
-    console.log("Delete id:", id);
-
+  const handleDelete = (id: string)=> {
+    setSelectedId(id)
+    setShowModal(true)
   }
+
+    const confirmDelete = async () => {
+      if (!selectedId){
+        toast.error("Invalid ImageId!")
+        setShowModal(false)
+        return
+      }
+
+      try {
+       const {data} = await api.delete(`/api/generate/${selectedId}`);
+        setThumbnails((prev: any[]) =>
+          prev.filter(item => item._id !== selectedId)
+        );
+
+        toast.success(data?.message);
+      } catch (error) {
+        toast.error("Delete failed!");
+      } finally {
+        setShowModal(false);
+      }
+    };
+
+
+
 
   useEffect(() => {
     fetchThumbnails()
@@ -54,8 +87,8 @@ const MyGeneratePage = () => {
         {/* LOADING */}
         {
           loading && (
-            <div className=" grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-              {Array.from({ length: 6 }).map((_, i) => (
+            <div className=" grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+              {Array.from({ length: 8 }).map((_, i) => (
                 <div key={i} className=" rounded-2xl bg-white/6 border border-white/10 animate-pulse h-[260px]" />
               ))}
             </div>
@@ -73,14 +106,14 @@ const MyGeneratePage = () => {
 
 
         {!loading && thumbnails.length > 0 && (
-          <div className=" columns-1 sm:columns-2 lg:columns-3 2xl:columns-4 gap-8">
+          <div className=" grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3">
             {
               thumbnails?.map((thumb: IThumbnail) => {
                 const aspectClasses = aspectRatioClassMap[thumb.aspect_ratio || '16:9'];
 
                 return (
                   <div key={thumb._id} onClick={() => navigate(`/generate/${thumb?._id}`)}
-                    className=" mb-8 group relative cursor-pointer rounded-2xl bg-white/6 border border-white/10 transition shadow-xl break-inside-avoid">
+                    className=" mb-3 group relative cursor-pointer rounded-2xl bg-white/6 border border-white/10 transition shadow-xl break-inside-avoid">
                     {/* IMAGE  */}
                     <div className={`relative overflow-hidden rounded-t-2xl ${aspectClasses} bg-black`}>
                       {thumb?.image_url ? (
@@ -128,6 +161,32 @@ const MyGeneratePage = () => {
         )}
 
       </div>
+
+      {showModal && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black/50">
+          <div className="bg-white p-6 rounded-xl w-[300px] text-center">
+            <h2 className="text-lg font-semibold mb-4">
+              Are you sure?
+            </h2>
+
+            <div className="flex justify-center gap-3">
+              <button
+                onClick={() => setShowModal(false)}
+                className="px-4 py-2 bg-gray-300 rounded-md"
+              >
+                Cancel
+              </button>
+
+              <button
+                onClick={confirmDelete}
+                className="px-4 py-2 bg-red-500 text-white rounded-md"
+              >
+                Yes, Delete
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </>
   )
 }
