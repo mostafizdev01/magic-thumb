@@ -15,7 +15,8 @@ const ThumbnailSchema = new mongoose.Schema<IThumbnail>(
         prompt_used: { type: String },
         user_prompt: { type: String },
         isGenerating: { type: Boolean, default: true }
-    }
+    },
+    {timestamps: true}
 )
 
 

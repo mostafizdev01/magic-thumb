@@ -150,6 +150,7 @@ const colorSchemeDescriptions = {
 
 // Generate thumbnail useing in cloudflare
 
+
 export const generateThumbnail = async (req: Request, res: Response) => {
 
   try {
@@ -164,7 +165,7 @@ export const generateThumbnail = async (req: Request, res: Response) => {
       style,
       aspect_ratio,
       color_scheme,
-      isGenerating: true
+      isGenerating: true,
     });
 
     // 🧠 Prompt build
@@ -241,9 +242,9 @@ export const generateThumbnail = async (req: Request, res: Response) => {
 /// Get MyThumbnail for Controller...
 export const getMyThumbnail = async (req: Request, res: Response) => {
   try {
-    const  userId  = '69afcfa37875502fb56d31c6';
+    const userId = '69afcfa37875502fb56d31c6';
     // const { id } = req.params;
-    const thumbnail = await Thumbnail.find({ userId })
+    const thumbnail = await Thumbnail.find({ userId }).sort({ createdAt: -1 })
 
     if (!thumbnail) {
       return res.json({
@@ -268,6 +269,7 @@ export const getMyThumbnail = async (req: Request, res: Response) => {
 /// Controller to get single Thumbnail of a user
 
 export const getThumbnailById = async (req: Request, res: Response) => {
+  
   try {
     // const { userId } = req.session;
     const { id } = req.params;
@@ -287,6 +289,7 @@ export const getThumbnailById = async (req: Request, res: Response) => {
       message: "Thumbnail Get Success!",
       thumbnail
     })
+
   } catch (error: any) {
     console.log("error:", error)
     res.status(500).json({ success: false, message: error.message })
@@ -299,9 +302,13 @@ export const getThumbnailById = async (req: Request, res: Response) => {
 export const deleteThumbnail = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
-    const { userId } = req.session;
 
-    await Thumbnail.findByIdAndDelete({ _id: id, userId })
+    if(!id){
+      throw new Error("Id Not found!")
+    }
+    // const { userId } = req.session;
+
+    await Thumbnail.findByIdAndDelete({ _id: id })
 
     res.json({
       success: true,
