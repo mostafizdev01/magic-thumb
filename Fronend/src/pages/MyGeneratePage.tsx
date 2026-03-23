@@ -37,35 +37,53 @@ const MyGeneratePage = () => {
     }
   }
 
-  const handleDownload = (image_url: string) => {
-    window.open(image_url, "_blank")
-  }
+  const handleDownload = async (image_url: string) => {
+    try {
+      const response = await fetch(image_url); // response image file
 
-  const handleDelete = (id: string)=> {
+      const blob = await response.blob(); // response raw file data. Example:- jpg, png, video. ## Blob means = Binary Large Object
+
+      const url = window.URL.createObjectURL(blob); /// create a random url.
+
+      const a = document.createElement("a"); // create HTML a tag. useing JS.
+      a.href = url;
+      a.download = "thumbnail.png"; // set download image name
+
+      document.body.appendChild(a); /// a tag add temporary page.
+      a.click(); /// auto click for download
+
+      a.remove(); /// a tag remove in temporary page.
+      window.URL.revokeObjectURL(url); // blob URL delete
+    } catch (error) {
+      console.log(error); 
+    }
+  };
+
+  const handleDelete = (id: string) => {
     setSelectedId(id)
     setShowModal(true)
   }
 
-    const confirmDelete = async () => {
-      if (!selectedId){
-        toast.error("Invalid ImageId!")
-        setShowModal(false)
-        return
-      }
+  const confirmDelete = async () => {
+    if (!selectedId) {
+      toast.error("Invalid ImageId!")
+      setShowModal(false)
+      return
+    }
 
-      try {
-       const {data} = await api.delete(`/api/generate/${selectedId}`);
-        setThumbnails((prev: any[]) =>
-          prev.filter(item => item._id !== selectedId)
-        );
+    try {
+      const { data } = await api.delete(`/api/generate/${selectedId}`);
+      setThumbnails((prev: any[]) =>
+        prev.filter(item => item._id !== selectedId)
+      );
 
-        toast.success(data?.message);
-      } catch (error) {
-        toast.error("Delete failed!");
-      } finally {
-        setShowModal(false);
-      }
-    };
+      toast.success(data?.message);
+    } catch (error) {
+      toast.error("Delete failed!");
+    } finally {
+      setShowModal(false);
+    }
+  };
 
 
 
@@ -164,22 +182,22 @@ const MyGeneratePage = () => {
 
       {showModal && (
         <div className="fixed inset-0 flex items-center justify-center bg-black/50">
-          <div className="bg-white p-6 rounded-xl w-[300px] text-center">
+          <div className="bg-white/20 backdrop-blur-sm p-6 rounded-xl w-[300px] text-center">
             <h2 className="text-lg font-semibold mb-4">
-              Are you sure?
+              Are you sure? You want to delete
             </h2>
 
             <div className="flex justify-center gap-3">
               <button
                 onClick={() => setShowModal(false)}
-                className="px-4 py-2 bg-gray-300 rounded-md"
+                className="px-4 py-2 bg-gray-800 hover:bg-gray-900 rounded-md"
               >
                 Cancel
               </button>
 
               <button
                 onClick={confirmDelete}
-                className="px-4 py-2 bg-red-500 text-white rounded-md"
+                className="px-4 py-2 bg-red-500 hover:bg-red-600 text-white rounded-md"
               >
                 Yes, Delete
               </button>

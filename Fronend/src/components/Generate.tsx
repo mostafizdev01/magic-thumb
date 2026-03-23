@@ -12,8 +12,7 @@ import { LoaderIcon } from "lucide-react";
 
 
 const Generate = () => {
-
-    const {pathname} = useLocation();
+    
     const { id } = useParams();
     const navigate = useNavigate();
 
@@ -67,7 +66,7 @@ const Generate = () => {
     }
 
     useEffect(() => {
-        if (!thumbnail) {
+        if (id) {
             fetchThumbnail()
         }
         if(thumbnail && loading){
