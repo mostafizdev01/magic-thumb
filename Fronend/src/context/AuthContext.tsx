@@ -61,7 +61,7 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     
     const logout = async () => {
         try {
-            const { data } = await api.post("/api/auth/logout")
+            const { data } = await api.post("/api/user/logout")
                 setUser(null)
                 setIsLoggedIn(false)
             toast.success(data.message)
@@ -73,7 +73,7 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
     const fetchUser = async () => {
         try {
-            const {data} = await api.get("/api/auth/verify")
+            const {data} = await api.get("/api/user/verify")
             if(data.user){
                 setUser(data.user as IUser)
                 setIsLoggedIn(true)
@@ -87,7 +87,7 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     useEffect(() => {
         (async () => {
             await fetchUser();
-        })
+        })();
     }, [])
 
 

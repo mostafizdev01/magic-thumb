@@ -27,7 +27,7 @@ export default function Navbar() {
                     <Link className="hover:text-pink-500 transition" to="/">Home</Link>
                     <Link className="hover:text-pink-500 transition" to="/generate">Generate</Link>
                     {
-                        !isLoggedIn ?
+                        isLoggedIn ?
                             <Link className="hover:text-pink-500 transition" to="/my-generation">My Generations</Link>
                             :
                             <Link className="hover:text-pink-500 transition" to="/about">About Us</Link>

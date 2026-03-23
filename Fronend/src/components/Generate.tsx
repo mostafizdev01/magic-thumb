@@ -9,10 +9,11 @@ import PreviewPanel from "./PreviewPanel";
 import { api } from "../config/api";
 import toast from "react-hot-toast";
 import { LoaderIcon } from "lucide-react";
+import { useAuth } from "../context/AuthContext";
 
 
 const Generate = () => {
-    
+
     const { id } = useParams();
     const navigate = useNavigate();
 
@@ -25,8 +26,17 @@ const Generate = () => {
     const [style, setStyle] = useState<ThumbnailStyle>('Bold & Graphic')
     const [styleDropdownOpen, setstyleDropdownOpen] = useState(false)
 
+    const { user } = useAuth();
+
     const handleGenerate = async () => {
         setLoading(true)
+        if (!user) {
+            setTimeout(() => {
+                toast.error("You aren't loggedIn!")
+                navigate('/login')
+            }, 1000);
+            return
+        }
         const api_payload = {
             title,
             prompt: additionalDetails,
@@ -36,20 +46,20 @@ const Generate = () => {
             text_overlay: true
         }
 
-        const {data} = await api.post("/api/generate", api_payload);
-        
+        const { data } = await api.post("/api/generate", api_payload);
+
         setThumbnail(data?.thumbnail);
-        
-        if(data?.success){
+
+        if (data?.success) {
             setLoading(false)
             toast.success(data.message)
-            navigate("/generate/" +data?.thumbnail?._id);
+            navigate("/generate/" + data?.thumbnail?._id);
         }
     }
 
     const fetchThumbnail = async () => {
         try {
-            const {data} = await api.get(`/api/generate/${id}`);
+            const { data } = await api.get(`/api/generate/${id}`);
             // console.log("data:", data)
             setThumbnail(data?.thumbnail as IThumbnail);
             setLoading(!data?.thumbnail.image_url);
@@ -61,7 +71,7 @@ const Generate = () => {
         } catch (error) {
             // console.log("error: ", error);
             toast.error("Something wen't wrong!")
-            
+
         }
     }
 
@@ -69,20 +79,20 @@ const Generate = () => {
         if (id) {
             fetchThumbnail()
         }
-        if(thumbnail && loading){
+        if (thumbnail && loading) {
             const interval = setInterval(() => {
                 fetchThumbnail()
             }, 5000);
-            return ()=> clearInterval(interval)
+            return () => clearInterval(interval)
         }
     }, [id])
 
     useEffect(() => {
-      if(!id && thumbnail){
-        setThumbnail(null)
-      }
+        if (!id && thumbnail) {
+            setThumbnail(null)
+        }
     }, [id])
-    
+
 
     return (
         <>
@@ -126,7 +136,6 @@ const Generate = () => {
                                             className=" w-full px-4 py-3 rounded-lg border border-white/10 bg-white/6 text-zinc-100
                                         placeholder:text-zinc-400 focus:outline-none focus:ring-2 focus:ring-pink-500 resize-none" />
                                     </div>
-
                                 </div>
 
                                 {/* Button */}
@@ -134,7 +143,20 @@ const Generate = () => {
 
                                 {
                                     !id && (
-                                        <button onClick={handleGenerate} className="text-[15px] w-full py-3.5 rounded-xl font-medium bg-linear-to-b from-pink-500 to-pink-600 hover:from-pink-700 disabled:cursor-not-allowed">{loading ? <div className=" flex justify-center items-center gap-1.5"><LoaderIcon className=" animate-spin size-5 [animation-duration:.6s]" /> Generating... </div> : "Generate Thumbnail"}</button>
+                                        <button
+                                            disabled={loading || !title}
+                                            onClick={handleGenerate}
+                                            className="text-[15px] w-full py-3.5 rounded-xl font-medium bg-linear-to-b from-pink-500 to-pink-600 hover:from-pink-700 disabled:bg-gray-400 disabled:cursor-default disabled:opacity-30"
+                                        >
+                                            {loading ? (
+                                                <div className="flex justify-center items-center gap-1.5">
+                                                    <LoaderIcon className="animate-spin size-5 [animation-duration:.6s]" />
+                                                    Generating...
+                                                </div>
+                                            ) : (
+                                                "Generate Thumbnail"
+                                            )}
+                                        </button>
                                     )
                                 }
 
