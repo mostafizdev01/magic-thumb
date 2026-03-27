@@ -243,7 +243,6 @@ export const generateThumbnail = async (req: Request, res: Response) => {
 export const getMyThumbnail = async (req: Request, res: Response) => {
   try {
     const userId = req.session.userId;
-    console.log("userId:", userId)
     if(!userId){
       return res.json({
         success: false,
