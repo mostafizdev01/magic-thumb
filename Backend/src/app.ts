@@ -28,24 +28,25 @@ app.use(
   })
 );
 
-
-app.use("/api/user", AuthRouter)
-app.use("/api", thumbnailRouter)
-
 app.use(session({
-  secret:  process.env.SESSION_SECRET as string,
+  secret: process.env.SESSION_SECRET as string,
   resave: false,
   saveUninitialized: false,
-  cookie: { maxAge: 1000 * 60 * 60 * 24 * 7,
+  cookie: {
+    maxAge: 1000 * 60 * 60 * 24 * 7,
     httpOnly: true,
     secure: false,
     sameSite: "lax"
-   }, // cookie expair in 7 days
+  }, // cookie expair in 7 days
   store: MongoStore.create({
     mongoUrl: process.env.DB_URL as string,
     collectionName: "sessions"
   })
 }))
+
+app.use("/api/user", AuthRouter)
+app.use("/api", thumbnailRouter)
+
 
 // Default route for testing
 app.get("/", (_req, res) => {

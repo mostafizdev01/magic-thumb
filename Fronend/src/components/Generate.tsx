@@ -104,7 +104,7 @@ const Generate = () => {
                         <div className={`space-y-6 ${id && 'pointer-events-none'}`}>
                             <div className=" p-6 rounded-2xl bg-white/8 border border-white/12 shadow-xl space-y-6">
                                 <div>
-                                    <h2 className=" text-xl font-bold text-zinc-100 mb-1">create Your Thumbnail</h2>
+                                    <h2 className=" text-xl font-bold text-zinc-100 mb-1">ate Your Thumbcrenail</h2>
                                     <p className=" text-sm text-zinc-300">Describe your vision and let AI bring it to life</p>
                                 </div>
                                 <div className=" space-y-5">

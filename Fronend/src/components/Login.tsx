@@ -1,12 +1,15 @@
 import { useEffect, useState } from "react"
 import BackSoftDrop from "./BackSoftDrop"
 import { useAuth } from "../context/AuthContext"
-import { useNavigate } from "react-router-dom"
+import { useLocation, useNavigate } from "react-router-dom"
 
 const Login = () => {
     const [state, setState] = useState("login")
     const {user, login, signUp} = useAuth();
     const navigate = useNavigate();
+    const location = useLocation();
+
+    const from = location.state?.from?.pathname || "/";
 
     const [formData, setFormData] = useState({
         name: '',
@@ -32,7 +35,7 @@ const Login = () => {
 
     useEffect(()=> {
         if(user){
-            navigate("/")
+            navigate(from, {replace: true})
         }
     }, [user])
 

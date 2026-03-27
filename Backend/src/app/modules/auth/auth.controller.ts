@@ -5,6 +5,7 @@ import { User } from "../user/user.model";
 
 export const loginUser = async(req:Request, res:Response)=> {
     try {
+
         const {email, password} = req.body;
 
         // find user by email
@@ -19,6 +20,10 @@ export const loginUser = async(req:Request, res:Response)=> {
         if(!isPasswordMatch){
             return res.status(400).json({success: false, message: "Password does't match!"})
         }
+
+        // session set ************************************************
+        req.session.isLoggedIn = true
+        req.session.userId = user?._id.toString();
 
         return res.json({
             success: true,

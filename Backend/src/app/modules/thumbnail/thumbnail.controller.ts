@@ -152,13 +152,13 @@ const colorSchemeDescriptions = {
 
 
 export const generateThumbnail = async (req: Request, res: Response) => {
-
   try {
-    const { userId, title, prompt: user_prompt, style, aspect_ratio, color_scheme } = req.body;
+    const userId = req.session.userId;
+    const { title, prompt: user_prompt, style, aspect_ratio, color_scheme } = req.body;
 
     // 🧾 DB create
     const thumbnail = await Thumbnail.create({
-      userId: "69afcfa37875502fb56d31c6",
+      userId,
       title,
       prompt_used: user_prompt,
       user_prompt,
@@ -242,8 +242,15 @@ export const generateThumbnail = async (req: Request, res: Response) => {
 /// Get MyThumbnail for Controller...
 export const getMyThumbnail = async (req: Request, res: Response) => {
   try {
-    const userId = '69afcfa37875502fb56d31c6';
-    // const { id } = req.params;
+    const userId = req.session.userId;
+    console.log("userId:", userId)
+    if(!userId){
+      return res.json({
+        success: false,
+        status: 500,
+        message: "You are not loggedIn!"
+      })
+    }
     const thumbnail = await Thumbnail.find({ userId }).sort({ createdAt: -1 })
 
     if (!thumbnail) {
