@@ -23,7 +23,7 @@ app.use(express.json()); // Parse incoming JSON requests
 
 app.use(
   cors({
-    origin: "http://localhost:5173",
+    origin: ["http://localhost:5173", "https://magic-thumb.vercel.app"],
     credentials: true,
   })
 );
