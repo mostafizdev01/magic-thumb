@@ -39,7 +39,7 @@ app.use(session({
     sameSite: "lax"
   }, // cookie expair in 7 days
   store: MongoStore.create({
-    mongoUrl: process.env.DB_URL as string,
+    mongoUrl: process.env.MONGO_URI as string,
     collectionName: "sessions"
   })
 }))

@@ -16,7 +16,7 @@ async function startServer() {
 
     /// connect to mongoose...
 
-    await mongoose.connect(process.env.DB_URL as string)
+    await mongoose.connect(process.env.MONGO_URI as string)
     console.log("✅ Database Connected Successfull!")
 
     handleProcessEvents();
