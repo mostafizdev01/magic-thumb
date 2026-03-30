@@ -35,8 +35,9 @@ app.use(session({
   cookie: {
     maxAge: 1000 * 60 * 60 * 24 * 7,
     httpOnly: true,
-    secure: false,
-    sameSite: "lax"
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "none",
+    path: "/"
   }, // cookie expair in 7 days
   store: MongoStore.create({
     mongoUrl: process.env.MONGO_URI as string,
