@@ -73,7 +73,7 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
     const fetchUser = async () => {
         try {
-            const {data} = await api.get("/api/user/verify")
+            const {data} = await api.get("/api/user/verify", {withCredentials: true})
             if(data.user){
                 setUser(data.user as IUser)
                 setIsLoggedIn(true)
