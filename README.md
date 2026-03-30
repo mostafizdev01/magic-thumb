@@ -74,7 +74,7 @@ MagicThumb is a simple and powerful AI-based thumbnail generator that helps user
 ## 1️⃣ Clone the repository
 
 ```bash
-git clone [https://github.com/your-username/magic-thumb.git](https://github.com/mostafizdev01/magic-thumb)
+git clone (https://github.com/mostafizdev01/magic-thumb)
 cd backend
 ```
 
