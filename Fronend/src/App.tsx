@@ -10,6 +10,8 @@ import LoginPage from "./pages/LoginPage";
 import YtPreviewPage from "./pages/YtPreviewPage";
 import { Toaster } from "react-hot-toast";
 import ProtectedRoute from "./context/ProtectedRoute";
+import AboutPage from "./pages/AboutPage";
+import ContactPage from "./pages/ContactPage";
 
 export default function App() {
     return (
@@ -20,9 +22,11 @@ export default function App() {
             <Routes>
                 <Route path="/" element={<HomePage />} />
                 <Route path="/generate" element={<GeneratePage />} />
+                <Route path="/about" element={<AboutPage />} />
                 <Route path="/generate/:id" element={<GeneratePage />} />
                 <Route path="/my-generation" element={<ProtectedRoute><MyGeneratePage /></ProtectedRoute>} />
                 <Route path="/preview" element={<ProtectedRoute><YtPreviewPage /></ProtectedRoute>} />
+                <Route path="/contact" element={<ContactPage />} />
                 <Route path="/login" element={<LoginPage />} />
             </Routes>
             <Footer />
