@@ -5,7 +5,7 @@ import { useLocation, useNavigate } from "react-router-dom"
 
 const Login = () => {
     const [state, setState] = useState("login")
-    const {user, login, signUp} = useAuth();
+    const { user, login, signUp, loading } = useAuth();
     const navigate = useNavigate();
     const location = useLocation();
 
@@ -16,7 +16,7 @@ const Login = () => {
         email: '',
         password: ''
     })
-    
+
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target
@@ -25,17 +25,16 @@ const Login = () => {
 
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
-        if(state === "login"){
+        if (state === "login") {
             login(formData)
-        }else{
+        } else {
             signUp(formData)
         }
-
     }
 
-    useEffect(()=> {
-        if(user){
-            navigate(from, {replace: true})
+    useEffect(() => {
+        if (user) {
+            navigate(from, { replace: true })
         }
     }, [user])
 
@@ -73,8 +72,16 @@ const Login = () => {
                     </button>
                 </div>
 
-                <button type="submit" className="mt-2 w-full h-11 rounded-full text-white bg-pink-600 hover:bg-pink-500 transition " >
-                    {state === "login" ? "Login" : "Sign up"}
+                <button
+                    type="submit"
+                    disabled={loading}
+                    className="mt-2 w-full h-11 rounded-full text-white bg-pink-600 hover:bg-pink-500 transition disabled:opacity-50"
+                >
+                    {loading
+                        ? "Please wait..."
+                        : state === "login"
+                            ? "Login"
+                            : "Sign up"}
                 </button>
 
                 <p onClick={() => setState(prev => prev === "login" ? "register" : "login")} className="text-gray-400 text-sm mt-3 mb-11 cursor-pointer" >
@@ -83,7 +90,7 @@ const Login = () => {
                 </p>
             </form>
             {/* Soft Backdrop*/}
-           <BackSoftDrop />
+            <BackSoftDrop />
         </>
     )
 }

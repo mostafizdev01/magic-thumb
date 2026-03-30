@@ -6,6 +6,7 @@ import toast from "react-hot-toast";
 
 interface AuthContextProps {
     isLoggedIn: boolean;
+    loading: boolean;
     setIsLoggedIn: (isLoggedI: boolean) => void;
     user: IUser | null;
     setUser: (user: IUser | null) => void
@@ -16,6 +17,7 @@ interface AuthContextProps {
 
 const AuthContext = createContext<AuthContextProps>({
     isLoggedIn: false,
+    loading: false,
     setIsLoggedIn: () => { },
     user: null,
     setUser: () => { },
@@ -28,17 +30,21 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
     const [user, setUser] = useState<IUser | null>(null)
     const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false)
+    const [loading, setLoading] = useState<boolean>(false)
 
 
     const signUp = async ({ name, email, password }: { name: string, email: string, password: string }) => {
         try {
+            setLoading(true)
             const { data } = await api.post("/api/user/register", { name, email, password })
             if (data?.user) {
+                setLoading(false)
                 setUser(data.user as IUser)
                 setIsLoggedIn(true)
             }
             toast.success(data.message)
         } catch (error) {
+            setLoading(false)
             // console.log("error:", error)
             toast.error("Something wen't wrong!")
         }
@@ -46,14 +52,17 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
     const login = async ({ email, password }: { email: string, password: string }) => {
         try {
+            setLoading(true)
             const { data } = await api.post("/api/user/login", { email, password })
             if (data?.user) {
+                setLoading(false)
                 setUser(data.user as IUser)
                 setIsLoggedIn(true)
                 toast.success(data.message)
             }
             
         } catch (error: any) {
+            setLoading(false)
             // console.log("error:", error)
             toast.error("Invalid email or password!")
         }
@@ -95,7 +104,7 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     const value = {
         user, setUser,
         isLoggedIn, setIsLoggedIn,
-        signUp, login, logout
+        signUp, login, logout, loading
     }
 
     return (

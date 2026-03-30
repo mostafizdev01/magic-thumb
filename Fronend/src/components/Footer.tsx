@@ -14,7 +14,7 @@ export default function Footer() {
                 transition={{ type: "spring", stiffness: 280, damping: 70, mass: 1 }}
             >
                 <Link to="/">
-                    <img className="" src="/assets/magic-logo.png" alt="footer logo" width={240} height="auto" />
+                    <img className=" w-full" src="/assets/magic-logo.png" alt="footer logo" width={240} height="auto" />
                 </Link>
                 {footerData.map((section, index) => (
                     <div key={index}>
